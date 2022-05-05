@@ -12,6 +12,20 @@ use function PHPUnit\Framework\throwException;
 class AsteroidController extends Controller
 {
     /**
+     * Fetch response from api endpoit
+     *
+     * @param [date] $start_date
+     * @param [date] $end_date
+     * @return response
+     */
+    public function getResponse($start_date, $end_date)
+    {
+        $url = "https://api.nasa.gov/neo/rest/v1/feed?start_date=$start_date&end_date=$end_date&detailed=true&api_key=" . config('app.nasa_api_key');
+
+        $response = Http::get($url);
+        return $response;
+    }
+    /**
      * get stats from nasa api endpoint
      *
      * @param AsteroidRequest $request
@@ -19,14 +33,10 @@ class AsteroidController extends Controller
      */
     public function getStats(AsteroidRequest $request)
     {
-
-        $url = "https://api.nasa.gov/neo/rest/v1/feed?start_date=$request->start_date&end_date=$request->end_date&detailed=true&api_key=" . config('app.nasa_api_key');
-
         $chart_data = $fastest_asteroid = $closest_asteroid = array();
         $average_size_of_asteroids  = 0;
         try {
-            $response = Http::get($url);
-
+            $response = $this->getResponse($request->start_date, $request->end_date);
             if ($response->status() == 200) {
                 $result = json_decode($response->body(), true);
                 $speed_data = $distance_data = array();
@@ -37,9 +47,7 @@ class AsteroidController extends Controller
                     $count = count($asteroids);
                     $chart_data[$key] = $count;
                     $total_asteroids_count = $total_asteroids_count + $count;
-
                     foreach ($asteroids as  $asteroid) {
-
                         $speed_data[$asteroid['id']] = $asteroid['close_approach_data'][0]['relative_velocity']['kilometers_per_hour'];
 
                         $distance_data[$asteroid['id']] = $asteroid['close_approach_data'][0]['miss_distance']['kilometers'];
@@ -47,15 +55,12 @@ class AsteroidController extends Controller
                         $total_size = $total_size + $asteroid['estimated_diameter']['kilometers']['estimated_diameter_max'];
                     }
                 }
-
                 //Fastest Asteroid in km/h (Respective Asteroid ID & its speed)
                 asort($speed_data);
                 $fastest_asteroid = array_slice($speed_data, -1, 1, true);
-
                 //Closest Asteroid (Respective Asteroid ID & its distance)
                 asort($distance_data);
                 $closest_asteroid = array_slice($distance_data, -1, 1, true);
-
                 //Average Size of the Asteroids in kilometers
                 $average_size_of_asteroids = round($total_size / $total_asteroids_count, 3);
             }

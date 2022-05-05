@@ -35,7 +35,7 @@ class AsteroidRequest extends FormRequest
     public function messages()
     {
         return [
-            'end_date.before' => 'End date must be before 7 days of start date.'
+            'end_date.before' => 'End date must be 7 days from start date.'
         ];
     }
 }

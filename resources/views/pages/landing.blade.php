@@ -15,7 +15,7 @@
     <div class="mb-3 row">
         <label for="start_date" class="col-sm-2 col-form-label">Start Date</label>
         <div class="col-sm-10">
-            <input id="start_date" name="start_date" data-provide="datepicker">
+            <input id="start_date" name="start_date" value="{{ old('start_date') }}" data-provide="datepicker">
 
         </div>
     </div>
@@ -23,7 +23,7 @@
     <div class="mb-3 row">
         <label for="end_date" class="col-sm-2 col-form-label">End Date</label>
         <div class="col-sm-10">
-            <input id="end_date" name="end_date" data-provide="datepicker">
+            <input id="end_date" name="end_date" value="{{ old('end_date') }}" data-provide="datepicker">
         </div>
     </div>
     <div class="col-6">

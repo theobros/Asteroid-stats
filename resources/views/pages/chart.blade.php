@@ -24,7 +24,7 @@
         @if(!empty($fastest_asteroid))
         <tr>
             <td>{{array_key_first($fastest_asteroid)}}</td>
-            <td>{{current($fastest_asteroid)}}</td>
+            <td>{{round(current($fastest_asteroid),3)}}</td>
         </tr>
 
         @endif
@@ -44,7 +44,7 @@
         @if(!empty($closest_asteroid))
         <tr>
             <td>{{array_key_first($closest_asteroid)}}</td>
-            <td>{{current($closest_asteroid)}}</td>
+            <td>{{round(current($closest_asteroid),3)}}</td>
         </tr>
 
         @endif
